@@ -16,5 +16,5 @@ To run the app please follow the below steps.
 3. baseURL+/Policy/agent
 ->API returns the list of policy's which a perticular agents helped/referred the user to get the policy. Inpust agent_name in the POST request body.
 
-4.baseURL+/Post
+4. baseURL+/Post
 ->API for uploading and retriving any post messages. if you make a http POST call alon with the message body, it'll be uploaded to the mongoBD cloude and if you make a http GET request without any body, the API will return the latest posts.
