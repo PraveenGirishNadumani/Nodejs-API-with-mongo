@@ -1,5 +1,4 @@
 const express = require('express');
-const {Worker, isMainThread, MessageChannel, workerData} = require('worker_threads');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const usage = require('usage');
@@ -9,7 +8,8 @@ HIGH_CPU_USAGE_LIMITE = 70; //restart the node server on 70% usage of the CPU.
 
 const fs = require("fs");
 const { promisify } = require("util");
-const pipeline = promisify(require("stream").pipeline);
+const {Worker,isMainThread, MessageChannel, workerData} = require('worker_threads');
+
 
 
 const app = new express();
@@ -32,23 +32,22 @@ app.get("/:id", (req,resp) =>{
 });
 
 
+const worker = new Worker('./cron.js');
 
-
-//function to listen to the CPU usage and restart the server on 70% of CPU usage.
-autoRestart = setInterval(function(){
-    usage.lookup(process.pid, function(err, result){
-        if(!err)
-        {
-            if(result.cpu > HIGH_CPU_USAGE_LIMITE)
-            {
-                console.log('restarting the server due to high useage of CPU');
-                 // restart because forever will respawn your process
-                process.exit();
-            }
-        }
-    })
-}, CHECK_CPU_USAGE_INTERVAL);
-
+// //function to listen to the CPU usage and restart the server on 70% of CPU usage.
+// autoRestart = setInterval(function(){
+//     usage.lookup(process.pid, function(err, result){
+//         if(!err)
+//         {
+//             if(result.cpu > HIGH_CPU_USAGE_LIMITE)
+//             {
+//                 console.log('restarting the server due to high useage of CPU');
+//                  // restart because forever will respawn your process
+//                 process.exit();
+//             }
+//         }
+//     })
+// }, CHECK_CPU_USAGE_INTERVAL);
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT);
